@@ -1,59 +1,65 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Joys.dk
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Velkommen til **Joys.dk** – en moderne medlemsplatform bygget med Laravel, Livewire og Tailwind CSS.
 
-## About Laravel
+## 🚀 Teknologier
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Framework**: [Laravel 12+](https://laravel.com)
+- **Frontend**: [Livewire 4](https://livewire.laravel.com), [Alpine.js](https://alpinejs.dev) og [Tailwind CSS](https://tailwindcss.com)
+- **Admin**: [Filament v5](https://filamentphp.com)
+- **Billedbehandling**: [Intervention Image v3](https://image.intervention.io) (med understøttelse af optimering af profilbilleder)
+- **Rettigheder**: [Spatie Laravel Permission](https://spatie.be/docs/laravel-permission/v6/introduction)
+- **Queue/Workers**: [Laravel Horizon](https://laravel.com/docs/horizon)
+- **Deployment**: [Deployer](https://deployer.org)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠 Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Systemkrav
+- PHP 8.2 eller højere
+- Node.js & NPM
+- SQLite (standard) eller MySQL/PostgreSQL
 
-## Learning Laravel
+### Lokal udvikling med Laravel Sail
+1. Klone projektet:
+   ```bash
+   git clone git@github.com:nsommer89/joys.dk.git
+   cd joys.dk
+   ```
+2. Installer PHP dependencies:
+   ```bash
+   composer install
+   ```
+3. Opsæt miljø:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+4. Kør Sail og migrationer:
+   ```bash
+   ./vendor/bin/sail up -d
+   ./vendor/bin/sail artisan migrate --seed
+   ```
+5. Installer frontend dependencies og kør build:
+   ```bash
+   npm install
+   npm run build
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## ✨ Funktioner
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Medlemsområde**: Komplet Dashboard, Udforsk, Beskeder og Vennelister.
+- **Profilredigering**: State-of-the-art profilredigering med "sticky" gem-funktion, real-time avatar opdatering og baggrunds-optimering af billeder.
+- **Offentlige Profiler**: Flotte, responsive profilvisninger med understøttelse af kønsspecifikke ikoner og præferencer.
+- **Floating Save Bar**: En smart, flydende bjælke der kun viser sig når der er ugemte ændringer.
+- **Toast Notifikationer**: Top-placerede, responsive notifikationer for bedre UX.
 
-## Laravel Sponsors
+## 📦 Scripts
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Vi har inkluderet nogle praktiske scripts i `composer.json`:
 
-### Premium Partners
+- `composer run setup`: Komplet opsætning af projektet (install, migrate, build).
+- `composer run dev`: Starter udviklingsserver, queue worker, logs og vite samtidigt.
+- `composer run test`: Kører alle PHPUnit tests.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📄 Licens
+Dette projekt er privat og ejes af Niko Sommer.
