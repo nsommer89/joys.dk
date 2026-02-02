@@ -62,4 +62,4 @@ Vi har inkluderet nogle praktiske scripts i `composer.json`:
 - `composer run test`: Kører alle PHPUnit tests.
 
 ## 📄 Licens
-Dette projekt er privat og ejes af Niko Sommer.
+Dette projekt er privat og ejes af Joys ApS.
