@@ -1,0 +1,221 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    /* Typography */
+    --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Joys Brand Color Palette - STRICT */
+    --color-base: #0b0b0e;
+    --color-surface: #121316;
+    --color-surface-variant: #1a1a1d;
+    --color-accent: #e11d48;
+    --color-accent-hover: #be123c;
+    --color-accent-subtle: rgba(225, 29, 72, 0.1);
+    --color-accent-border: rgba(225, 29, 72, 0.3);
+
+    /* Grays & Neutrals */
+    --color-gray-50: #fafafa;
+    --color-gray-100: #f5f5f5;
+    --color-gray-200: #e5e5e5;
+    --color-gray-300: #d4d4d4;
+    --color-gray-400: #a3a3a3;
+    --color-gray-500: #737373;
+    --color-gray-600: #525252;
+    --color-gray-700: #404040;
+    --color-gray-800: #262626;
+    --color-gray-900: #171717;
+
+    /* Material Elevation Shadows */
+    --shadow-dp2: 0 2px 4px rgba(0, 0, 0, 0.5);
+    --shadow-dp4: 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-dp8: 0 8px 16px rgba(0, 0, 0, 0.6);
+    --shadow-dp16: 0 16px 32px rgba(0, 0, 0, 0.7);
+    --shadow-dp24: 0 24px 48px rgba(0, 0, 0, 0.8);
+
+    /* Border Radius Tokens */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+
+    /* Spacing (4dp base) */
+    --spacing-1: 4px;
+    --spacing-2: 8px;
+    --spacing-3: 12px;
+    --spacing-4: 16px;
+    --spacing-5: 20px;
+    --spacing-6: 24px;
+    --spacing-8: 32px;
+    --spacing-10: 40px;
+    --spacing-12: 48px;
+    --spacing-16: 64px;
+
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Styles */
+* {
+    @apply box-border;
+}
+
+html {
+    @apply antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    @apply bg-base text-gray-100 font-sans;
+    background-image:
+        linear-gradient(to bottom,
+            rgba(11, 11, 14, 0) 0%,
+            rgba(11, 11, 14, 0.7) 40%,
+            rgba(11, 11, 14, 0.95) 70%,
+            rgba(11, 11, 14, 1) 100%),
+        url('/assets/joys_design_bg.png');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+}
+
+/* Material Surface Elevations with Sharp Borders */
+.surface-dp0 {
+    background-color: var(--color-base);
+}
+
+.surface-dp2 {
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-dp2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Glassmorphism Card - Improved Contrast */
+.glass-card {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(18, 19, 22, 0.75);
+    border: 1px solid rgba(225, 29, 72, 0.06);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.03),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-card-light {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(18, 19, 22, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-card-intense {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(18, 19, 22, 0.9);
+    border: 1px solid rgba(225, 29, 72, 0.08);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 0 20px rgba(225, 29, 72, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Material Surface Elevations */
+
+/* Hover Elevation */
+.hover-elevate {
+    transition: all var(--transition-base);
+}
+
+.hover-elevate:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-dp8);
+}
+
+/* Material Ripple Effect */
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width var(--transition-fast), height var(--transition-fast);
+}
+
+.ripple:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-base);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-surface-variant);
+    border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gray-600);
+}
+
+/* Link Styles with wire:navigate */
+a[wire\:navigate] {
+    @apply transition-colors duration-200;
+}
+
+/* Global active/tap highlights suppression */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+a:focus,
+button:focus {
+    outline: none;
+}
+
+/* Focus Styles */
+:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+@utility scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}

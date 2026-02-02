@@ -1,0 +1,394 @@
+<div class="max-w-4xl mx-auto py-12 px-4 md:px-0" x-data="{ activeTab: 'profil' }">
+    
+    <!-- Title Section -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-white mb-2">Min Profil</h1>
+        <p class="text-gray-400">Administrer dine profiloplysninger og hvordan du fremstår på siden.</p>
+    </div>
+
+    <!-- Main Card Container -->
+    <div class="bg-[#1a1b1e] rounded-2xl border border-white/5 overflow-hidden shadow-2xl">
+        
+        <!-- Tabs Navigation -->
+        <div class="flex border-b border-white/10 bg-[#151619] px-6">
+            <button 
+                @click="activeTab = 'profil'"
+                :class="activeTab === 'profil' ? 'border-emerald-500 text-emerald-500 bg-white/5' : 'border-transparent text-gray-400 hover:text-white hover:bg-white/5'"
+                class="px-8 py-4 border-b-2 font-medium text-sm transition-all focus:outline-none"
+            >
+                Profil
+            </button>
+            <button 
+                @click="activeTab = 'galleri'"
+                :class="activeTab === 'galleri' ? 'border-emerald-500 text-emerald-500 bg-white/5' : 'border-transparent text-gray-400 hover:text-white hover:bg-white/5'"
+                class="px-8 py-4 border-b-2 font-medium text-sm transition-all focus:outline-none"
+            >
+                Galleri
+            </button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="p-8 md:p-10">
+            <!-- Profil Tab -->
+            <div x-show="activeTab === 'profil'" class="space-y-10 animate-fade-in">
+                <form wire:submit.prevent="save" class="space-y-10">
+                    
+                    <!-- Section: Avatar & General -->
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
+                         <!-- Avatar Column -->
+                         <div class="md:col-span-4 flex flex-col items-center md:items-start space-y-4">
+                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 text-center md:text-left w-full">Profilbillede</label>
+                            <div class="relative group">
+                                <div class="w-40 h-40 rounded-full p-1 border-2 border-dashed border-white/20 group-hover:border-emerald-500/50 transition-colors">
+                                    <div class="w-full h-full rounded-full overflow-hidden bg-[#121316] relative ring-4 ring-[#1a1b1e]">
+                                        @if ($profile_photo)
+                                            <img src="{{ $profile_photo->temporaryUrl() }}" class="w-full h-full object-cover">
+                                        @elseif (auth()->user()->profile_photo_path)
+                                            <img src="{{ Storage::url(auth()->user()->profile_photo_path) }}" class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full flex items-center justify-center text-gray-600">
+                                                <svg class="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                            </div>
+                                        @endif
+                                        
+                                        <!-- Overlay -->
+                                        <label class="absolute inset-0 flex flex-col items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-all cursor-pointer">
+                                            <svg class="w-8 h-8 text-white mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                            </svg>
+                                            <span class="text-xs font-medium text-white">Skift billede</span>
+                                            <input type="file" wire:model="profile_photo" class="hidden">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div wire:loading wire:target="profile_photo" class="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
+                                    <svg class="animate-spin h-6 w-6 text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                         </div>
+                         
+                         <!-- Location & Info Column -->
+                         <div class="md:col-span-8 space-y-6">
+                            <div class="border-b border-white/5 pb-4 mb-4">
+                                <h3 class="text-lg font-medium text-white">Generelt</h3>
+                                <p class="text-sm text-gray-500">Hvor befinder du dig?</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider">Postnummer</label>
+                                    <input type="text" wire:model="zip_code" class="w-full bg-[#121316] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors">
+                                    @error('zip_code') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider">By</label>
+                                    <input type="text" wire:model="city" class="w-full bg-[#121316] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors">
+                                    @error('city') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+
+                    <div class="border-t border-white/5"></div>
+
+                    <!-- Dynamic Person Fields -->
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-medium text-white">Personlige Detaljer</h3>
+                                <p class="text-sm text-gray-500">Fortæl lidt om {{ $is_couple ? 'jer' : 'dig' }} selv.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 {{ $is_couple ? 'lg:grid-cols-2' : '' }} gap-8">
+                            @foreach($persons as $index => $person)
+                                <div class="bg-[#121316]/50 p-6 rounded-2xl border border-white/5 hover:border-white/10 transition-colors space-y-5">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500 text-sm font-bold">
+                                            {{ $index + 1 }}
+                                        </div>
+                                        <span class="text-sm font-bold text-gray-300 uppercase tracking-wide">
+                                            @if($is_couple) 
+                                                Person {{ $index + 1 }} 
+                                            @else 
+                                                Dine oplysninger
+                                            @endif
+                                        </span>
+                                    </div>
+        
+                                    <!-- Name -->
+                                    <div class="space-y-2">
+                                        <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider">Navn / Kaldenavn</label>
+                                        <input type="text" wire:model="persons.{{ $index }}.name" class="w-full bg-[#1a1b1e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors">
+                                        @error("persons.{$index}.name") <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+        
+                                     <!-- Gender (Person Specific) -->
+                                    <div class="space-y-2">
+                                        <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider">Køn</label>
+                                        <select wire:model="persons.{{ $index }}.gender_id" class="w-full bg-[#1a1b1e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors appearance-none">
+                                            <option value="">Vælg køn</option>
+                                            @foreach($personGenders as $pg)
+                                                <option value="{{ $pg->id }}">{{ $pg->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error("persons.{$index}.gender_id") <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+        
+                                    <!-- Age -->
+                                    <div class="space-y-2">
+                                        <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider">Alder</label>
+                                        <input type="number" wire:model="persons.{{ $index }}.age" class="w-full bg-[#1a1b1e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors">
+                                        @error("persons.{$index}.age") <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+        
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <!-- Height -->
+                                        <div class="space-y-2">
+                                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider">Højde (cm)</label>
+                                            <input type="number" wire:model="persons.{{ $index }}.height" class="w-full bg-[#1a1b1e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors">
+                                             @error("persons.{$index}.height") <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                        </div>
+                                        <!-- Weight -->
+                                        <div class="space-y-2">
+                                            <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider">Vægt (kg)</label>
+                                            <input type="number" wire:model="persons.{{ $index }}.weight" class="w-full bg-[#1a1b1e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors">
+                                            @error("persons.{$index}.weight") <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div class="border-t border-white/5"></div>
+    
+                    <!-- Description -->
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-medium text-white">Profiltekst</h3>
+                            <p class="text-sm text-gray-500">Skriv en indbydende tekst som andre medlemmer kan læse.</p>
+                        </div>
+                        <div class="relative">
+                            <textarea wire:model="description" rows="6" class="w-full bg-[#121316] border border-white/10 rounded-xl px-6 py-4 text-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors placeholder-gray-600 resize-none leading-relaxed" placeholder="Fortæl lidt om hvad du/I søger, jeres interesser osv..."></textarea>
+                            <div class="absolute bottom-4 right-4 text-xs text-gray-600 bg-[#121316] px-2 rounded">
+                                Vi anbefaler min. 50 tegn
+                            </div>
+                        </div>
+                         @error('description') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                    </div>
+    
+                    <div class="border-t border-white/5"></div>
+
+                    <!-- Preferences (Tags) -->
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-medium text-white">Præferencer</h3>
+                            <p class="text-sm text-gray-500">Vælg de tags der passer bedst på dig/jer.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            @foreach($allPreferences as $pref)
+                                <label class="cursor-pointer relative group">
+                                    <input type="checkbox" wire:model="selected_preferences" value="{{ $pref->id }}" class="sr-only peer">
+                                    <div class="px-4 py-2 rounded-lg text-sm bg-[#121316] border border-white/10 text-gray-400 peer-checked:bg-emerald-500 peer-checked:text-white peer-checked:border-emerald-500 transition-all hover:border-white/20 select-none font-medium">
+                                        {{ $pref->name }}
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
+                         @if($allPreferences->isEmpty())
+                            <p class="text-sm text-gray-600 italic">Ingen præferencer oprettet endnu.</p>
+                         @endif
+                    </div>
+    
+                    <!-- Submit -->
+                    <div class="pt-8 border-t border-white/5 flex items-center justify-end">
+                        <button type="submit" 
+                            wire:loading.attr="disabled" 
+                            wire:target="save"
+                            class="px-8 py-3 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 active:bg-emerald-700 transition-colors shadow-lg shadow-emerald-500/20 transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center gap-2">
+                            <span wire:loading.remove wire:target="save">Gem Profil</span>
+                            <span wire:loading wire:target="save" class="flex items-center gap-2">
+                                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Gemmer...
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+    
+            <!-- Galleri Tab -->
+            <div x-show="activeTab === 'galleri'" class="min-h-[400px] flex flex-col items-center justify-center text-center space-y-6 animate-fade-in">
+                <div class="w-20 h-20 bg-[#121316] rounded-2xl flex items-center justify-center text-gray-600 border border-white/5">
+                    <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-2">Galleri kommer snart</h3>
+                    <p class="text-gray-400 max-w-sm mx-auto">Vi arbejder på højtryk for at give dig mulighed for at vise dine bedste billeder frem til andre medlemmer.</p>
+                </div>
+            </div>
+        </div>
+                
+
+    
+        <!-- Toast Notification -->
+        @if (session()->has('success'))
+            <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" class="fixed bottom-6 right-6 bg-emerald-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4 animate-slide-in-right z-50 border border-emerald-400/20">
+                <div class="p-2 bg-white/20 rounded-full">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="font-bold">Succes!</h4>
+                    <p class="text-sm opacity-90">{{ session('success') }}</p>
+                </div>
+            </div>
+        @endif
+    </div>
+</div>
+<!-- Create Album Modal -->
+<div x-show="$wire.showCreateAlbumModal" 
+     x-cloak
+     class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+     @click.self="$wire.showCreateAlbumModal = false">
+    <div class="bg-[#1a1b1e] rounded-2xl border border-white/10 shadow-2xl max-w-md w-full p-8" @click.away="$wire.showCreateAlbumModal = false">
+        <h3 class="text-xl font-bold text-white mb-6">Opret nyt album</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-400 mb-2">Album navn</label>
+                <input type="text" wire:model="newAlbumName" class="w-full bg-[#121316] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors" placeholder="F.eks. Sommer 2026">
+                @error('newAlbumName') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+            </div>
+            <div class="flex gap-3">
+                <button wire:click="createAlbum" class="flex-1 px-4 py-3 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 transition-colors">
+                    Opret
+                </button>
+                <button @click="$wire.showCreateAlbumModal = false" class="flex-1 px-4 py-3 bg-white/5 text-white font-bold rounded-xl hover:bg-white/10 transition-colors">
+                    Annuller
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rename Album Modal -->
+<div x-show="$wire.showRenameAlbumModal" 
+     x-cloak
+     class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+     @click.self="$wire.showRenameAlbumModal = false">
+    <div class="bg-[#1a1b1e] rounded-2xl border border-white/10 shadow-2xl max-w-md w-full p-8">
+        <h3 class="text-xl font-bold text-white mb-6">Omdøb album</h3>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-400 mb-2">Nyt navn</label>
+                <input type="text" wire:model="renameAlbumName" class="w-full bg-[#121316] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors">
+                @error('renameAlbumName') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+            </div>
+            <div class="flex gap-3">
+                <button wire:click="renameAlbum" class="flex-1 px-4 py-3 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 transition-colors">
+                    Gem
+                </button>
+                <button @click="$wire.showRenameAlbumModal = false" class="flex-1 px-4 py-3 bg-white/5 text-white font-bold rounded-xl hover:bg-white/10 transition-colors">
+                    Annuller
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Album Confirmation Modal -->
+<div x-show="$wire.showDeleteAlbumModal" 
+     x-cloak
+     class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+     @click.self="$wire.showDeleteAlbumModal = false">
+    <div class="bg-[#1a1b1e] rounded-2xl border border-white/10 shadow-2xl max-w-md w-full p-8">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white">Slet album</h3>
+                <p class="text-sm text-gray-400 mt-1">Denne handling kan ikke fortrydes</p>
+            </div>
+        </div>
+        <p class="text-gray-300 mb-6">Er du sikker på at du vil slette dette album og alle dets billeder permanent?</p>
+        <div class="flex gap-3">
+            <button wire:click="deleteAlbum" class="flex-1 px-4 py-3 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 transition-colors">
+                Slet Album
+            </button>
+            <button @click="$wire.showDeleteAlbumModal = false" class="flex-1 px-4 py-3 bg-white/5 text-white font-bold rounded-xl hover:bg-white/10 transition-colors">
+                Annuller
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Set Password Modal -->
+<div x-show="$wire.showSetPasswordModal" 
+     x-cloak
+     class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+     @click.self="$wire.showSetPasswordModal = false">
+    <div class="bg-[#1a1b1e] rounded-2xl border border-white/10 shadow-2xl max-w-md w-full p-8">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 bg-emerald-500/10 rounded-full flex items-center justify-center">
+                <svg class="w-5 h-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-white">Beskyt album med kodeord</h3>
+        </div>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-400 mb-2">Kodeord</label>
+                <input type="password" wire:model="albumPassword" class="w-full bg-[#121316] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors" placeholder="Mindst 4 tegn">
+                @error('albumPassword') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-400 mb-2">Bekræft kodeord</label>
+                <input type="password" wire:model="confirmAlbumPassword" class="w-full bg-[#121316] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-colors">
+                @error('confirmAlbumPassword') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+            </div>
+            <div class="flex gap-3">
+                <button wire:click="setAlbumPassword" class="flex-1 px-4 py-3 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 transition-colors">
+                    Gem Kodeord
+                </button>
+                <button @click="$wire.showSetPasswordModal = false" class="flex-1 px-4 py-3 bg-white/5 text-white font-bold rounded-xl hover:bg-white/10 transition-colors">
+                    Annuller
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Image Confirmation Modal -->
+<div x-show="$wire.showDeleteImageModal" 
+     x-cloak
+     class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+     @click.self="$wire.showDeleteImageModal = false">
+    <div class="bg-[#1a1b1e] rounded-2xl border border-white/10 shadow-2xl max-w-md w-full p-8">
+        <h3 class="text-xl font-bold text-white mb-4">Slet billede</h3>
+        <p class="text-gray-300 mb-6">Er du sikker på at du vil slette dette billede?</p>
+        <div class="flex gap-3">
+            <button wire:click="deleteImage" class="flex-1 px-4 py-3 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 transition-colors">
+                Slet
+            </button>
+            <button @click="$wire.showDeleteImageModal = false" class="flex-1 px-4 py-3 bg-white/5 text-white font-bold rounded-xl hover:bg-white/10 transition-colors">
+                Annuller
+            </button>
+        </div>
+    </div>
+</div>
