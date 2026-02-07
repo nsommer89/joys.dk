@@ -22,5 +22,21 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('production')) {
             \Illuminate\Support\Facades\URL::forceScheme('https');
         }
+
+        try {
+            $configs = \Illuminate\Support\Facades\Cache::rememberForever('joys_configs_all', function () {
+                if (\Illuminate\Support\Facades\Schema::hasTable('joys_configs')) {
+                    return \App\Models\JoysConfig::all()->pluck('value', 'key')->toArray();
+                }
+
+                return [];
+            });
+
+            foreach ($configs as $key => $value) {
+                config()->set('joys.'.$key, $value);
+            }
+        } catch (\Exception $e) {
+            // Setup phase - ignore
+        }
     }
 }

@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use App\Models\Preference;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class PreferenceSeeder extends Seeder
 {

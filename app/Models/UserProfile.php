@@ -18,8 +18,6 @@ class UserProfile extends Model
         return $this->belongsTo(User::class);
     }
 
-
-
     public function profilePeople(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(ProfilePerson::class);

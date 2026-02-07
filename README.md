@@ -15,7 +15,7 @@ Velkommen til **Joys.dk** – en moderne medlemsplatform bygget med Laravel, Liv
 ## 🛠 Installation
 
 ### Systemkrav
-- PHP 8.2 eller højere
+- PHP 8.4 eller højere
 - Node.js & NPM
 - SQLite (standard) eller MySQL/PostgreSQL
 

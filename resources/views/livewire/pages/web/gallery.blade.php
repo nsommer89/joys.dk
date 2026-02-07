@@ -23,6 +23,20 @@
     prev() {
         this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
         this.currentImage = this.images[this.currentIndex];
+    },
+    touchStartX: 0,
+    touchEndX: 0,
+    touchStart(e) {
+        this.touchStartX = e.changedTouches[0].screenX;
+    },
+    touchEnd(e) {
+        this.touchEndX = e.changedTouches[0].screenX;
+        this.handleSwipe();
+    },
+    handleSwipe() {
+        if (Math.abs(this.touchEndX - this.touchStartX) < 50) return;
+        if (this.touchEndX < this.touchStartX) this.next();
+        if (this.touchEndX > this.touchStartX) this.prev();
     }
 }">
     {{-- Hero Section --}}
@@ -95,6 +109,7 @@
         @keydown.arrow-right.window="next()"
         @keydown.arrow-left.window="prev()"
         class="fixed inset-0 z-[9999] flex items-center justify-center"
+        style="touch-action: manipulation"
     >
         {{-- Backdrop --}}
         <div class="absolute inset-0 bg-black/95 backdrop-blur-xl" @click="closeLightbox()"></div>
@@ -128,7 +143,11 @@
         </button>
 
         {{-- Image Container --}}
-        <div class="relative z-10 max-w-[90vw] max-h-[85vh] flex items-center justify-center p-4">
+        <div 
+            class="relative z-10 max-w-[90vw] max-h-[85vh] flex items-center justify-center p-4"
+            @touchstart="touchStart($event)"
+            @touchend="touchEnd($event)"
+        >
             <img 
                 :src="currentImage" 
                 alt="Galleri billede" 
@@ -136,6 +155,7 @@
                 x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="opacity-0 scale-95"
                 x-transition:enter-end="opacity-100 scale-100"
+                style="touch-action: manipulation"
             >
         </div>
     </div>

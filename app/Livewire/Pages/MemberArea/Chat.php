@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Pages\MemberArea;
 
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Chat extends Component

@@ -3,14 +3,13 @@
     <div class="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
         {{-- Background Elements --}}
         <div class="absolute inset-0 bg-transparent">
-            {{-- Animated Gradient Mesh --}}
-            <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-accent/20 rounded-full blur-[128px] animate-pulse-slow"></div>
-            <div class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[128px] animate-pulse-slow delay-1000"></div>
+            {{-- Animated Gradient Mesh - Hidden on mobile for performance --}}
+            <div class="hidden md:block absolute top-0 left-1/4 w-[400px] h-[400px] bg-accent/15 rounded-full blur-[80px] animate-pulse-slow"></div>
+            <div class="hidden md:block absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-600/8 rounded-full blur-[80px] animate-pulse-slow"></div>
         </div>
 
         {{-- Content Container --}}
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            
             {{-- Badge --}}
             <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card-intense border border-white/10 mb-8 animate-fade-in-up">
                 <span class="relative flex h-2 w-2">
@@ -159,6 +158,7 @@
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                         allowfullscreen
+                        loading="lazy"
                     ></iframe>
                 </div>
                 <div class="p-6 lg:p-8">

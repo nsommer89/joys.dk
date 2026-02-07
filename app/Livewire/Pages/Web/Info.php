@@ -14,7 +14,7 @@ class Info extends Component
             $this->section = $section;
         }
 
-        if (!in_array($this->section, array_keys($this->getSections()))) {
+        if (! in_array($this->section, array_keys($this->getSections()))) {
             $this->section = 'om-joys';
         }
     }

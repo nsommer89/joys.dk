@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Pages\Web;
 
-use Livewire\Component;
 use App\Models\News;
+use Livewire\Component;
 
 class NewsPost extends Component
 {
@@ -13,7 +13,7 @@ class NewsPost extends Component
     {
         $this->news = $news;
 
-        if (!$this->news->is_published || $this->news->published_at > now()) {
+        if (! $this->news->is_published || $this->news->published_at > now()) {
             abort(404);
         }
     }
@@ -28,7 +28,7 @@ class NewsPost extends Component
             ->get();
 
         return view('livewire.pages.web.news-post', [
-            'latestNews' => $latestNews
-        ])->layout('layouts.app', ['title' => $this->news->title . ' - Joys.dk']);
+            'latestNews' => $latestNews,
+        ])->layout('layouts.app', ['title' => $this->news->title.' - Joys.dk']);
     }
 }

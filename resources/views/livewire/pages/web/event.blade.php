@@ -136,6 +136,27 @@
                         </div>
                     @endauth
 
+                    @auth
+                        @if($attendees->count() > 0)
+                            <div class="border-t border-white/10 pt-6">
+                                <h4 class="font-bold text-white mb-4 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                    Tilmeldte ({{ $attendeesCount }})
+                                </h4>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach($attendees as $attendee)
+                                        <a href="{{ route('member.profile.view', $attendee->username) }}" wire:navigate class="relative group" title="{{ $attendee->username }}">
+                                            <x-avatar :user="$attendee" size="w-10 h-10" class="ring-2 ring-white/10 group-hover:ring-accent transition-all" show-status="true" />
+                                        </a>
+                                    @endforeach
+                                </div>
+                                @if($attendeesCount > 20)
+                                    <p class="text-xs text-gray-500 mt-2 italic">+ {{ $attendeesCount - 20 }} flere...</p>
+                                @endif
+                            </div>
+                        @endif
+                    @endauth
+
                     <div class="border-t border-white/10 pt-6">
                         <h4 class="font-bold text-white mb-4 flex items-center gap-2">
                             <svg class="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">

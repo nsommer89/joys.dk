@@ -1,21 +1,20 @@
 <div 
+    id="mobile-drawer"
     x-data="{ 
-        open: false,
-        init() {
-            this.$watch('open', value => {
-                if (value) {
-                    document.body.classList.add('overflow-hidden');
-                } else {
-                    document.body.classList.remove('overflow-hidden');
-                }
-            });
-        }
+        get open() { return $store.mobileMenu?.open ?? false },
+        set open(value) { if ($store.mobileMenu) $store.mobileMenu.open = value }
     }"
+    x-init="$watch('open', value => {
+        if (value) {
+            document.body.classList.add('overflow-hidden');
+            $el.classList.remove('hidden');
+        } else {
+            document.body.classList.remove('overflow-hidden');
+        }
+    })"
     x-show="open"
-    @toggle-mobile-menu.window="open = !open"
-    @close-mobile-menu.window="open = false"
     x-cloak
-    class="fixed inset-0 z-[9999] md:hidden"
+    class="fixed inset-0 z-[9999] md:hidden hidden"
 >
     {{-- Drawer Panel (Full Screen) --}}
     <div 
@@ -39,7 +38,7 @@
             <x-logo class="h-8 w-auto" />
             
             <button 
-                @click="open = false"
+                onclick="document.getElementById('mobile-drawer').classList.add('hidden'); document.body.classList.remove('overflow-hidden'); if(window.Alpine && Alpine.store('mobileMenu')) Alpine.store('mobileMenu').open = false;"
                 class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white transition-all active:scale-95"
             >
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -62,7 +61,7 @@
                     <a 
                         href="{{ route($item['route']) }}" 
                         wire:navigate 
-                        @click="open = false"
+                        onclick="document.getElementById('mobile-drawer').classList.add('hidden'); document.body.classList.remove('overflow-hidden');"
                         class="flex items-center gap-3 p-3 rounded-xl transition-all duration-300 border border-transparent
                             {{ request()->routeIs($item['route'])
                                 ? 'bg-accent/10 border-accent/20 text-white' 
@@ -83,8 +82,8 @@
         {{-- Footer - Compact User Section --}}
         <div class="relative z-10 p-4 pb-8 border-t border-white/5 bg-white/[0.02] backdrop-blur-xl">
             @guest
-                <button 
-                    @click="$dispatch('open-login-modal'); open = false" 
+            <button 
+                    onclick="document.getElementById('mobile-drawer').classList.add('hidden'); document.body.classList.remove('overflow-hidden'); if(window.Livewire) Livewire.dispatch('open-login-modal');"
                     class="w-full bg-accent hover:bg-accent-hover text-white font-bold py-3.5 px-6 rounded-xl transition-all text-center text-lg shadow-xl shadow-accent/20 border border-white/10 relative overflow-hidden group"
                 >
                     <span class="relative z-10">Log ind</span>
@@ -95,7 +94,7 @@
                     <a 
                         href="{{ route('member.explore') }}" 
                         wire:navigate 
-                        @click="open = false"
+                        onclick="document.getElementById('mobile-drawer').classList.add('hidden'); document.body.classList.remove('overflow-hidden');"
                         class="flex items-center justify-between p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all group"
                     >
                         <div class="flex items-center gap-3">

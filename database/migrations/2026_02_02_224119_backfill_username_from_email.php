@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -21,7 +19,7 @@ return new class extends Migration
 
             // Ensure uniqueness
             while (\Illuminate\Support\Facades\DB::table('users')->where('username', $username)->where('id', '!=', $user->id)->exists()) {
-                $username = $baseUsername . $counter;
+                $username = $baseUsername.$counter;
                 $counter++;
             }
 

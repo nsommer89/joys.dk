@@ -1,20 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use App\Livewire\Pages\Web\Home;
-use App\Livewire\Pages\Web\Events;
-use App\Livewire\Pages\Web\Gallery;
-use App\Livewire\Pages\Web\Info;
-use App\Livewire\Pages\Web\Contact;
-// use App\Livewire\Pages\MemberArea\Dashboard;
-use App\Livewire\Pages\MemberArea\Messages;
-use App\Livewire\Pages\MemberArea\Profile;
+use App\Livewire\Pages\MemberArea\Chat;
 use App\Livewire\Pages\MemberArea\Explore;
 use App\Livewire\Pages\MemberArea\Friends;
-use App\Livewire\Pages\MemberArea\Chat;
+use App\Livewire\Pages\MemberArea\Messages;
+use App\Livewire\Pages\MemberArea\Profile;
 use App\Livewire\Pages\MemberArea\Settings;
+use App\Livewire\Pages\Web\Contact;
+// use App\Livewire\Pages\MemberArea\Dashboard;
+use App\Livewire\Pages\Web\Events;
+use App\Livewire\Pages\Web\Gallery;
+use App\Livewire\Pages\Web\Home;
+use App\Livewire\Pages\Web\Info;
 use App\Livewire\Pages\Web\WhoIsComing;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::get('/', Home::class)->name('home');
@@ -36,6 +36,7 @@ Route::post('/logout', function () {
     Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
+
     return redirect('/');
 })->middleware('auth')->name('logout');
 
@@ -43,15 +44,29 @@ Route::post('/logout', function () {
 // Member area (protected)
 Route::middleware('auth')->prefix('medlem')->group(function () {
     Route::get('/beskeder', Messages::class)->name('member.messages');
-    
+
     // Edit Profile (Min profil)
     Route::get('/profil', \App\Livewire\MemberArea\EditProfile::class)->name('member.profile.edit');
-    
+    Route::get('/profil/albums', \App\Livewire\MemberArea\EditProfile::class)->name('member.profile.edit.albums');
+    Route::get('/profil/albums/{albumSlug}/{imageHash?}', \App\Livewire\MemberArea\EditProfile::class)->name('member.profile.edit.album');
+
     // Public Profile View
     Route::get('/profil/{username}', \App\Livewire\MemberArea\PublicProfile::class)->name('member.profile.view');
-    
+
+    // Albums
+    Route::get('/profil/{username}/albums', \App\Livewire\MemberArea\PublicProfile::class)->name('member.profile.albums');
+    Route::get('/profil/{username}/albums/{albumSlug}/{imageHash?}', \App\Livewire\MemberArea\PublicProfile::class)->name('member.profile.album');
+    Route::get('/profil/{username}/venner', \App\Livewire\MemberArea\PublicProfile::class)->name('member.profile.friends');
+
     Route::get('/udforsk', Explore::class)->name('member.explore');
     Route::get('/venner', Friends::class)->name('member.friends');
+    Route::get('/venner/anmodninger', Friends::class)->name('member.friends.requests');
     Route::get('/chat', Chat::class)->name('member.chat');
     Route::get('/indstillinger', Settings::class)->name('member.settings');
 });
+
+// Album image serving (outside auth middleware - handles own authorization)
+Route::get('/album-image/{image}', [\App\Http\Controllers\AlbumImageController::class, 'show'])
+    ->name('album.image');
+Route::get('/album-image/{image}/thumb', [\App\Http\Controllers\AlbumImageController::class, 'thumbnail'])
+    ->name('album.image.thumbnail');

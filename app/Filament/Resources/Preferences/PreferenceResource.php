@@ -2,16 +2,15 @@
 
 namespace App\Filament\Resources\Preferences;
 
-use App\Filament\Resources\Preferences\Pages;
 use App\Models\Preference;
-use Filament\Forms;
-use Filament\Schemas\Schema;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
 class PreferenceResource extends Resource
@@ -31,7 +30,7 @@ class PreferenceResource extends Resource
                     ->maxLength(255)
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn (string $operation, $state, \Filament\Schemas\Components\Utilities\Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
-                
+
                 Forms\Components\Hidden::make('slug')
                     ->required()
                     ->unique(ignoreRecord: true),

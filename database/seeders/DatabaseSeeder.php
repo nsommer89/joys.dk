@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             PreferenceSeeder::class,
             AdminUserSeeder::class,
             DemoDataSeeder::class,
+            GalleryImageSeeder::class,
         ]);
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Pages\Web;
 
+use App\Models\GalleryImage;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\GalleryImage;
 
 class Gallery extends Component
 {
@@ -13,10 +13,10 @@ class Gallery extends Component
     public function render()
     {
         $images = GalleryImage::orderBy('sort_order', 'asc')
-            ->paginate(24);
+            ->paginate(12);
 
         return view('livewire.pages.web.gallery', [
-            'images' => $images
+            'images' => $images,
         ])->layout('layouts.app', ['title' => 'Galleri - Joys.dk']);
     }
 }

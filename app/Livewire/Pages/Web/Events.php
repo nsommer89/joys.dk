@@ -11,7 +11,7 @@ class Events extends Component
 
     public function toggleAttendance($eventId)
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('login');
         }
 
@@ -37,7 +37,7 @@ class Events extends Component
             ->paginate(9);
 
         return view('livewire.pages.web.events', [
-            'events' => $events
+            'events' => $events,
         ])->layout('layouts.app', ['title' => 'Events - Joys.dk']);
     }
 }

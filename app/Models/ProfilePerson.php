@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\UserProfile;
-use App\Models\Gender;
 
 class ProfilePerson extends Model
 {
@@ -20,6 +18,4 @@ class ProfilePerson extends Model
     {
         return $this->belongsTo(UserProfile::class);
     }
-
-
 }

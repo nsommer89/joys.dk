@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_profile_id');
             $table->foreignId('gender_id');
-            
+
             $table->string('name')->nullable();
             $table->integer('age')->nullable();
             $table->integer('height')->nullable(); // cm

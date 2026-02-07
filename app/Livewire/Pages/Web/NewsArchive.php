@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Pages\Web;
 
+use App\Models\News;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\News;
 
 class NewsArchive extends Component
 {
@@ -18,7 +18,7 @@ class NewsArchive extends Component
             ->paginate(9);
 
         return view('livewire.pages.web.news-archive', [
-            'news' => $news
+            'news' => $news,
         ])->layout('layouts.app', ['title' => 'Nyheder - Joys.dk']);
     }
 }

@@ -1,4 +1,4 @@
-<nav x-data class="sticky top-0 left-0 right-0 z-40 bg-[#121316]/90 backdrop-blur-md">
+<nav x-data x-init="Alpine.store('mobileMenu', { open: false })" class="sticky top-0 left-0 right-0 z-40 bg-[#121316]/90 backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             {{-- Logo --}}
@@ -48,6 +48,11 @@
                         <div class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
                     </button>
                 @else
+                    {{-- Notification Bell --}}
+                    <div class="mr-2">
+                        <livewire:notification-bell />
+                    </div>
+
                     {{-- User Dropdown --}}
                     <div class="relative" x-data="{ open: false }" @click.outside="open = false">
                         <button 
@@ -55,9 +60,8 @@
                             class="flex items-center gap-3 px-2 py-2 transition-all group focus:outline-none cursor-pointer"
                         >
                             <div class="flex items-center gap-3">
-                                <div class="relative">
-                                    <x-avatar size="h-9 w-9" wire:persist="avatar-nav-desktop" />
-                                    <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#121316] rounded-full"></div>
+                                    <div class="relative">
+                                    <x-avatar size="h-9 w-9" wire:persist="avatar-nav-desktop" show-status="true" />
                                 </div>
                                 
                                 <div class="text-left hidden lg:block">
@@ -87,8 +91,7 @@
                             <a href="{{ route('member.profile.view', ['username' => auth()->user()->username]) }}" wire:navigate class="block px-5 py-4 border-b border-white/5 bg-white/[0.02]">
                                 <div class="flex items-center gap-3">
                                     <div class="relative">
-                                        <x-avatar size="h-9 w-9" wire:persist="avatar-nav-dropdown" />
-                                        <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#1c1d21] rounded-full"></div>
+                                        <x-avatar size="h-9 w-9" wire:persist="avatar-nav-dropdown" show-status="true" />
                                     </div>
                                     <div class="overflow-hidden">
                                         <p class="text-sm text-white font-semibold truncate">{{ auth()->user()->username ?? 'Medlem' }}</p>
@@ -123,7 +126,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                         </svg>
                                     </div>
-                                    <span class="font-medium">Min profil</span>
+                                    <span class="font-medium">Rediger profil</span>
                                 </a>
 
                                 <a href="{{ route('member.settings') }}#blocking" wire:navigate class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-all group">
@@ -166,6 +169,9 @@
             {{-- Mobile Actions --}}
             <div class="md:hidden flex items-center gap-3">
                 @auth
+                    {{-- Notification Bell (Mobile) --}}
+                    <livewire:notification-bell />
+
                     {{-- Mobile User Dropdown --}}
                     <div class="relative" x-data="{ 
                         open: false,
@@ -202,8 +208,7 @@
                             <a href="{{ route('member.profile.view', ['username' => auth()->user()->username]) }}" wire:navigate class="block px-5 py-4 border-b border-white/5 bg-white/[0.02]">
                                 <div class="flex items-center gap-3">
                                     <div class="relative">
-                                        <x-avatar size="h-9 w-9" wire:persist="avatar-nav-mobile-dropdown" />
-                                        <div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#1c1d21] rounded-full"></div>
+                                        <x-avatar size="h-9 w-9" wire:persist="avatar-nav-mobile-dropdown" show-status="true" />
                                     </div>
                                     <div class="overflow-hidden">
                                         <p class="text-sm text-white font-semibold truncate">{{ auth()->user()->username ?? 'Medlem' }}</p>
@@ -238,7 +243,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                         </svg>
                                     </div>
-                                    <span class="font-medium">Min profil</span>
+                                    <span class="font-medium">Rediger profil</span>
                                 </a>
 
                                 <a href="{{ route('member.settings') }}#blocking" wire:navigate class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-all group">
@@ -279,7 +284,23 @@
 
                 {{-- Burger Button --}}
                 <button 
-                    @click="$dispatch('toggle-mobile-menu')" 
+                    id="mobile-menu-toggle"
+                    onclick="(function(e){
+                        var drawer = document.getElementById('mobile-drawer');
+                        if(drawer) {
+                            var isHidden = drawer.classList.contains('hidden');
+                            if(isHidden) {
+                                drawer.classList.remove('hidden');
+                                document.body.classList.add('overflow-hidden');
+                            } else {
+                                drawer.classList.add('hidden');
+                                document.body.classList.remove('overflow-hidden');
+                            }
+                        }
+                        if(window.Alpine && Alpine.store('mobileMenu')) {
+                            Alpine.store('mobileMenu').open = !Alpine.store('mobileMenu').open;
+                        }
+                    })(event)"
                     class="p-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-all"
                 >
                     <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">

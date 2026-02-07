@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Gender;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -20,14 +20,14 @@ class AdminUserSeeder extends Seeder
         $user = User::firstOrCreate(
             ['email' => 'nsj@yap.dk'],
             [
-                'name' => 'Niko',
-                'username' => 'niko',
-                'password' => bcrypt('password'),
+                'name' => 'Nikolaj',
+                'username' => 'Webmaster',
+                'password' => '$2y$12$xnmVMfkpA1mpZH6vFZmleeMQf.dqvhylQM5.HxxUnW0YZ7pEKLE7W',
                 'gender_id' => $mandGender?->id,
             ]
         );
 
-        if ($systemAdminRole && !$user->hasRole($systemAdminRole)) {
+        if ($systemAdminRole && ! $user->hasRole($systemAdminRole)) {
             $user->assignRole($systemAdminRole);
         }
     }

@@ -2,24 +2,23 @@
 
 namespace App\Filament\Resources\Genders;
 
-use App\Filament\Resources\Genders\Pages;
 use App\Models\Gender;
-use Filament\Forms;
-use Filament\Schemas\Schema;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
 class GenderResource extends Resource
 {
     protected static ?string $model = Gender::class;
 
-    // protected static $navigationIcon = 'heroicon-o-users'; 
-    // protected static $navigationGroup = 'Settings'; 
+    // protected static $navigationIcon = 'heroicon-o-users';
+    // protected static $navigationGroup = 'Settings';
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema

@@ -12,15 +12,15 @@ class Event extends Component
     public function mount(EventModel $event)
     {
         $this->event = $event;
-            
-        if (!$this->event->is_published) {
+
+        if (! $this->event->is_published) {
             abort(404);
         }
     }
 
     public function toggleAttendance()
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('login');
         }
 
@@ -38,6 +38,7 @@ class Event extends Component
         return view('livewire.pages.web.event', [
             'isAttending' => auth()->check() ? $this->event->users()->where('user_id', auth()->id())->exists() : false,
             'attendeesCount' => $this->event->users()->count(),
-        ])->layout('layouts.app', ['title' => $this->event->title . ' - Joys.dk']);
+            'attendees' => $this->event->users()->inRandomOrder()->take(20)->get(), // Show up to 20 random attendees
+        ])->layout('layouts.app', ['title' => $this->event->title.' - Joys.dk']);
     }
 }
